@@ -1,0 +1,359 @@
+{
+    "frequency_plans": [
+        {
+            "id": "EU_863_870",
+            "name": "Europe 863-870 MHz (SF12 for RX2)",
+            "base_frequency": 868,
+            "band_id": "EU_863_870"
+        },
+        {
+            "id": "EU_863_870_TTN",
+            "base_id": "EU_863_870",
+            "name": "Europe 863-870 MHz (SF9 for RX2 - recommended)",
+            "base_frequency": 868,
+            "band_id": "EU_863_870"
+        },
+        {
+            "id": "EU_863_870_ROAMING_DRAFT",
+            "base_id": "EU_863_870",
+            "name": "Europe 863-870 MHz, 6 channels for roaming (Draft)",
+            "base_frequency": 868,
+            "band_id": "EU_863_870"
+        },
+        {
+            "id": "EU_868_1",
+            "base_id": "EU_863_870",
+            "name": "Europe 868.1 MHz",
+            "base_frequency": 868,
+            "band_id": "EU_863_870"
+        },
+        {
+            "id": "EU_433",
+            "name": "Europe 433 MHz (ITU region 1)",
+            "base_frequency": 433,
+            "band_id": "EU_433"
+        },
+        {
+            "id": "US_902_928_FSB_1",
+            "name": "United States 902-928 MHz, FSB 1",
+            "base_frequency": 915,
+            "band_id": "US_902_928"
+        },
+        {
+            "id": "US_902_928_FSB_2",
+            "name": "United States 902-928 MHz, FSB 2 (used by TTN)",
+            "base_frequency": 915,
+            "band_id": "US_902_928"
+        },
+        {
+            "id": "US_902_928_FSB_3",
+            "name": "United States 902-928 MHz, FSB 3",
+            "base_frequency": 915,
+            "band_id": "US_902_928"
+        },
+        {
+            "id": "US_902_928_FSB_4",
+            "name": "United States 902-928 MHz, FSB 4",
+            "base_frequency": 915,
+            "band_id": "US_902_928"
+        },
+        {
+            "id": "US_902_928_FSB_5",
+            "name": "United States 902-928 MHz, FSB 5",
+            "base_frequency": 915,
+            "band_id": "US_902_928"
+        },
+        {
+            "id": "US_902_928_FSB_6",
+            "name": "United States 902-928 MHz, FSB 6",
+            "base_frequency": 915,
+            "band_id": "US_902_928"
+        },
+        {
+            "id": "US_902_928_FSB_7",
+            "name": "United States 902-928 MHz, FSB 7",
+            "base_frequency": 915,
+            "band_id": "US_902_928"
+        },
+        {
+            "id": "US_902_928_FSB_8",
+            "name": "United States 902-928 MHz, FSB 8",
+            "base_frequency": 915,
+            "band_id": "US_902_928"
+        },
+        {
+            "id": "US_903_0",
+            "base_id": "US_902_928_FSB_1",
+            "name": "United States 903.0 MHz",
+            "base_frequency": 915,
+            "band_id": "US_902_928"
+        },
+        {
+            "id": "AU_915_928_FSB_1",
+            "name": "Australia 915-928 MHz, FSB 1",
+            "base_frequency": 915,
+            "band_id": "AU_915_928"
+        },
+        {
+            "id": "AU_915_928_FSB_2",
+            "name": "Australia 915-928 MHz, FSB 2 (used by TTN)",
+            "base_frequency": 915,
+            "band_id": "AU_915_928"
+        },
+        {
+            "id": "AU_915_928_FSB_3",
+            "name": "Australia 915-928 MHz, FSB 3",
+            "base_frequency": 915,
+            "band_id": "AU_915_928"
+        },
+        {
+            "id": "AU_915_928_FSB_4",
+            "name": "Australia 915-928 MHz, FSB 4",
+            "base_frequency": 915,
+            "band_id": "AU_915_928"
+        },
+        {
+            "id": "AU_915_928_FSB_5",
+            "name": "Australia 915-928 MHz, FSB 5",
+            "base_frequency": 915,
+            "band_id": "AU_915_928"
+        },
+        {
+            "id": "AU_915_928_FSB_6",
+            "name": "Australia 915-928 MHz, FSB 6",
+            "base_frequency": 915,
+            "band_id": "AU_915_928"
+        },
+        {
+            "id": "AU_915_928_FSB_7",
+            "name": "Australia 915-928 MHz, FSB 7",
+            "base_frequency": 915,
+            "band_id": "AU_915_928"
+        },
+        {
+            "id": "AU_915_928_FSB_8",
+            "name": "Australia 915-928 MHz, FSB 8",
+            "base_frequency": 915,
+            "band_id": "AU_915_928"
+        },
+        {
+            "id": "CN_470_510_FSB_1",
+            "name": "China 470-510 MHz, FSB 1",
+            "base_frequency": 470,
+            "band_id": "CN_470_510"
+        },
+        {
+            "id": "CN_470_510_FSB_11",
+            "name": "China 470-510 MHz, FSB 11 (used by TTN)",
+            "base_frequency": 470,
+            "band_id": "CN_470_510"
+        },
+        {
+            "id": "AS_920_923",
+            "name": "Asia 920-923 MHz",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_920_923_LBT",
+            "base_id": "AS_920_923",
+            "name": "Asia 920-923 MHz with LBT",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_920_923_TTN_JP_1",
+            "name": "Japan 920-923 MHz with LBT (channels 31-38)",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_920_923_TTN_JP_1_LAND_MOBILE",
+            "base_id": "AS_920_923_TTN_JP_1",
+            "name": "Japan 920-923 MHz with LBT (channels 31-38), Max EIRP 27 dBm",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_920_923_TTN_JP_2",
+            "name": "Japan 920-923 MHz with LBT (channels 24-27 and 35-38)",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_920_923_TTN_JP_3",
+            "name": "Japan 920-923 MHz with LBT (channels 24-31)",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_920_923_TTN_JP_3_LAND_MOBILE",
+            "base_id": "AS_920_923_TTN_JP_3",
+            "name": "Japan 920-923 MHz with LBT (channels 24-31), Max EIRP 27 dBm",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_923",
+            "name": "Asia 915-928 MHz (AS923 Group 1) with only default channels",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_923_2",
+            "name": "Asia 920-923 MHz (AS923 Group 2) with only default channels",
+            "base_frequency": 915,
+            "band_id": "AS_923_2"
+        },
+        {
+            "id": "AS_923_3",
+            "name": "Asia 915-921 MHz (AS923 Group 3) with only default channels",
+            "base_frequency": 915,
+            "band_id": "AS_923_3"
+        },
+        {
+            "id": "AS_923_4",
+            "name": "Asia 917-920 MHz (AS923 Group 4) with only default channels",
+            "base_frequency": 915,
+            "band_id": "AS_923_4"
+        },
+        {
+            "id": "AS_923_NDT",
+            "base_id": "AS_923",
+            "name": "Asia 915-928 MHz (AS923 Group 1) with only default channels and dwell time disabled",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_923_DT",
+            "base_id": "AS_923",
+            "name": "Asia 915-928 MHz (AS923 Group 1) with only default channels and dwell time enabled",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_923_2_NDT",
+            "base_id": "AS_923_2",
+            "name": "Asia 920-923 MHz (AS923 Group 2) with only default channels and dwell time disabled",
+            "base_frequency": 915,
+            "band_id": "AS_923_2"
+        },
+        {
+            "id": "AS_923_2_DT",
+            "base_id": "AS_923_2",
+            "name": "Asia 920-923 MHz (AS923 Group 2) with only default channels and dwell time enabled",
+            "base_frequency": 915,
+            "band_id": "AS_923_2"
+        },
+        {
+            "id": "AS_923_3_NDT",
+            "base_id": "AS_923_3",
+            "name": "Asia 920-923 MHz (AS923 Group 3) with only default channels and dwell time disabled",
+            "base_frequency": 915,
+            "band_id": "AS_923_3"
+        },
+        {
+            "id": "AS_923_3_DT",
+            "base_id": "AS_923_3",
+            "name": "Asia 920-923 MHz (AS923 Group 3) with only default channels and dwell time enabled",
+            "base_frequency": 915,
+            "band_id": "AS_923_3"
+        },
+        {
+            "id": "AS_923_4_NDT",
+            "base_id": "AS_923_4",
+            "name": "Asia 920-923 MHz (AS923 Group 4) with only default channels and dwell time disabled",
+            "base_frequency": 915,
+            "band_id": "AS_923_4"
+        },
+        {
+            "id": "AS_923_4_DT",
+            "base_id": "AS_923_4",
+            "name": "Asia 920-923 MHz (AS923 Group 4) with only default channels and dwell time enabled",
+            "base_frequency": 915,
+            "band_id": "AS_923_4"
+        },
+        {
+            "id": "AS_923_925",
+            "name": "Asia 923-925 MHz",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_923_925_LBT",
+            "base_id": "AS_923_925",
+            "name": "Asia 923-925 MHz with LBT",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_920_923_TTN_AU",
+            "base_id": "AS_920_923",
+            "name": "Asia 920-923 MHz (used by TTN Australia)",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "AS_923_925_TTN_AU",
+            "base_id": "AS_923_925",
+            "name": "Asia 923-925 MHz (used by TTN Australia - secondary channels)",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "KR_920_923_TTN",
+            "name": "South Korea 920-923 MHz",
+            "base_frequency": 915,
+            "band_id": "KR_920_923"
+        },
+        {
+            "id": "MA_869_870_DRAFT",
+            "name": "Morocco 869-870 MHz",
+            "base_frequency": 868,
+            "band_id": "MA_869_870_DRAFT"
+        },
+        {
+            "id": "IN_865_867",
+            "name": "India 865-867 MHz",
+            "base_frequency": 868,
+            "band_id": "IN_865_867"
+        },
+        {
+            "id": "RU_864_870_TTN",
+            "name": "Russia 864-870 MHz",
+            "base_frequency": 868,
+            "band_id": "RU_864_870"
+        },
+        {
+            "id": "ISM_2400_3CH_DRAFT2",
+            "name": "LoRa 2.4 GHz with 3 channels (Draft 2)",
+            "base_frequency": 2450,
+            "band_id": "ISM_2400"
+        },
+        {
+            "id": "IL_917_920_TTN",
+            "name": "Israel 917-920 MHz (channels 1-4 and 11-14)",
+            "base_frequency": 915,
+            "band_id": "AS_923_4"
+        },
+        {
+            "id": "IL_917_920_TTN_2",
+            "name": "Israel 917-920 MHz (channels 1-7 and 9)",
+            "base_frequency": 915,
+            "band_id": "AS_923_4"
+        },
+        {
+            "id": "SG_920_923_TTN",
+            "base_id": "AS_920_923",
+            "name": "Singapore 920-923 MHz",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        },
+        {
+            "id": "UZ_923_1",
+            "name": "Uzbekistan 915-928 MHz with only default channels",
+            "base_frequency": 915,
+            "band_id": "AS_923"
+        }
+    ]
+}
