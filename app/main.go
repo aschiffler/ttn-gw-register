@@ -16,19 +16,12 @@ import (
 	"time"
 
 	"github.com/gorilla/sessions"
+	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
 )
 
 var (
-	oauthConfig = &oauth2.Config{
-		ClientID:     os.Getenv("OAUTH_CLIENT_ID"),
-		ClientSecret: os.Getenv("OAUTH_CLIENT_SECRET"),
-		RedirectURL:  os.Getenv("OAUTH_CLIENT_CALLBACK"),
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  "https://" + os.Getenv("LNS_DOMAIN") + "/oauth/authorize",
-			TokenURL: "https://" + os.Getenv("LNS_DOMAIN") + "/oauth/token",
-		},
-	}
+	oauthConfig  = &oauth2.Config{}
 	store        = sessions.NewCookieStore([]byte("4711081508154711"))
 	frequencyMap = make(map[string]FrequencyPlan)
 )
@@ -38,6 +31,7 @@ type PageData struct {
 	ButtonText string
 	FreqMap    map[string]FrequencyPlan
 	CupsKey    string
+	Lns        string
 }
 
 type ApiKeyResponse struct {
@@ -162,6 +156,14 @@ func createFrequencyPlan() {
 
 func main() {
 	// Serve static assets from the "assets" directory
+	godotenv.Load()
+	oauthConfig.RedirectURL = os.Getenv("OAUTH_CLIENT_CALLBACK")
+	oauthConfig.ClientID = os.Getenv("OAUTH_CLIENT_ID")
+	oauthConfig.ClientSecret = os.Getenv("OAUTH_CLIENT_SECRET")
+	oauthConfig.Endpoint = oauth2.Endpoint{
+		AuthURL:  "https://" + os.Getenv("LNS_DOMAIN") + "/oauth/authorize",
+		TokenURL: "https://" + os.Getenv("LNS_DOMAIN") + "/oauth/token",
+	}
 	fs := http.FileServer(http.Dir("assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 	http.HandleFunc("/", handleMain)
@@ -181,6 +183,7 @@ func handleMain(w http.ResponseWriter, r *http.Request) {
 		ButtonText: "Get API key",
 		FreqMap:    frequencyMap,
 		CupsKey:    r.FormValue("cupskey"),
+		Lns:        os.Getenv("LNS_DOMAIN"),
 	}
 	if session.IsNew {
 		fmt.Println("New session")
@@ -206,7 +209,8 @@ func handleMain(w http.ResponseWriter, r *http.Request) {
 	// Render main page
 	tmpl := template.Must(template.New("post").Parse(`
 	<html>
-	<body>
+	<body><center>
+		<h1>LNS used: {{.Lns}}</h1>
 		<form action="/post" method="post">
 			<button type="submit">{{.ButtonText}}</button>
 			<p></p>
@@ -228,6 +232,7 @@ func handleMain(w http.ResponseWriter, r *http.Request) {
 			</select>
 			</div>
 		</form>
+		</center>></body>
         <script>
             function getQueryParams() {
                 let params = {};
@@ -265,7 +270,6 @@ func handleMain(w http.ResponseWriter, r *http.Request) {
 				}
             }
         </script>
-	</body>
 	</html>`))
 	tmpl.Execute(w, data)
 }
