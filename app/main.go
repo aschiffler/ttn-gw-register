@@ -171,9 +171,9 @@ func main() {
 	http.HandleFunc("/callback", handleCallback)
 	http.HandleFunc("/post", handlePost)
 	createFrequencyPlan()
-	fmt.Println("Listening on :8080")
+	fmt.Println("Listening on "+os.Getenv("BIND"))
 	fmt.Println("LNS_DOMAIN=" + os.Getenv("LNS_DOMAIN"))
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(os.Getenv("BIND"), nil))
 }
 
 func handleMain(w http.ResponseWriter, r *http.Request) {
