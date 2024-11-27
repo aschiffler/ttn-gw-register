@@ -232,7 +232,7 @@ func handleMain(w http.ResponseWriter, r *http.Request) {
 			</select>
 			</div>
 		</form>
-		</center>></body>
+	</center></body>
         <script>
             function getQueryParams() {
                 let params = {};
