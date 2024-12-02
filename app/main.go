@@ -213,7 +213,7 @@ func handleMain(w http.ResponseWriter, r *http.Request) {
 	<html>
 	<body><center>
 		<h1>LNS used: {{.Lns}}</h1>
-		<form action="/post" method="post">
+		<form action="./post" method="post">
 			<button type="submit">{{.ButtonText}}</button>
 			<p></p>
 			<div id=myform>
