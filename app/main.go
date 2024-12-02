@@ -155,8 +155,9 @@ func createFrequencyPlan() {
 }
 
 func main() {
-	// Serve static assets from the "assets" directory
-	godotenv.Load()
+	if _, err := os.Stat(".env"); os.IsExist(err) {
+		godotenv.Load()
+	}
 	oauthConfig.RedirectURL = os.Getenv("OAUTH_CLIENT_CALLBACK")
 	oauthConfig.ClientID = os.Getenv("OAUTH_CLIENT_ID")
 	oauthConfig.ClientSecret = os.Getenv("OAUTH_CLIENT_SECRET")
@@ -164,16 +165,17 @@ func main() {
 		AuthURL:  "https://" + os.Getenv("LNS_DOMAIN") + "/oauth/authorize",
 		TokenURL: "https://" + os.Getenv("LNS_DOMAIN") + "/oauth/token",
 	}
-	fs := http.FileServer(http.Dir("assets"))
-	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
-	http.HandleFunc("/", handleMain)
-	http.HandleFunc("/login", handleLogin)
-	http.HandleFunc("/callback", handleCallback)
-	http.HandleFunc("/post", handlePost)
+	mainRouter := http.NewServeMux()
+	router := http.NewServeMux()
+	mainRouter.HandleFunc("/", handleMain)
+	mainRouter.HandleFunc("/login", handleLogin)
+	mainRouter.HandleFunc("/callback", handleCallback)
+	mainRouter.HandleFunc("/post", handlePost)
+	router.Handle(os.Getenv("BASE_PATH")+"/", http.StripPrefix(os.Getenv("BASE_PATH"), mainRouter))
 	createFrequencyPlan()
-	fmt.Println("Listening on "+os.Getenv("BIND"))
+	fmt.Println("Listening on " + os.Getenv("BIND") + os.Getenv("BASE_PATH"))
 	fmt.Println("LNS_DOMAIN=" + os.Getenv("LNS_DOMAIN"))
-	log.Fatal(http.ListenAndServe(os.Getenv("BIND"), nil))
+	log.Fatal(http.ListenAndServe(os.Getenv("BIND"), router))
 }
 
 func handleMain(w http.ResponseWriter, r *http.Request) {
@@ -194,7 +196,7 @@ func handleMain(w http.ResponseWriter, r *http.Request) {
 	// Check if user is already logged in
 	if session.Values["state"] == nil && r.FormValue("login") != "0" {
 		// redirect to /login
-		http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, os.Getenv("BASE_PATH")+"/login", http.StatusTemporaryRedirect)
 		return
 	}
 	//
@@ -291,7 +293,7 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 	// New session, generate state
 	state, err := generateRandomString(16)
 	if err != nil {
-		http.Redirect(w, r, "/?msg=🚫 Failed to generate state", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?msg=🚫 Failed to generate state", http.StatusTemporaryRedirect)
 		return
 	}
 	// Save state in session
@@ -317,7 +319,7 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 				tokenID := strings.Split(accessToken, ".")[1]
 				err := invalidateToken(accessToken, tokenID, session.Values["user"].(string))
 				if err != nil {
-					http.Redirect(w, r, "/?msg=🚫 Failed to invalidate token", http.StatusTemporaryRedirect)
+					http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?msg=🚫 Failed to invalidate token", http.StatusTemporaryRedirect)
 					return
 				}
 				fmt.Println("Token ID: " + tokenID + " invalidated")
@@ -328,14 +330,14 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	// Check if state is valid
 	state := r.FormValue("state")
 	if state != session.Values["state"] {
-		http.Redirect(w, r, "/?msg=🚫 State invalid", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?msg=🚫 State invalid", http.StatusTemporaryRedirect)
 		return
 	}
 	// Get new token
 	code := r.FormValue("code")
 	token, err := oauthConfig.Exchange(context.Background(), code)
 	if err != nil {
-		http.Redirect(w, r, "/?msg=🚫 Code exchange failed", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?msg=🚫 Code exchange failed", http.StatusTemporaryRedirect)
 		return
 	}
 	// Save token in session
@@ -345,26 +347,26 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	client := oauthConfig.Client(context.Background(), token)
 	resp, err := client.Get("https://" + os.Getenv("LNS_DOMAIN") + "/api/v3/auth_info")
 	if err != nil {
-		http.Redirect(w, r, "/?msg=🚫 Failed to get user info", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?msg=🚫 Failed to get user info", http.StatusTemporaryRedirect)
 		return
 	}
 	defer resp.Body.Close()
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		http.Redirect(w, r, "/?msg=🚫 Failed to read body", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?msg=🚫 Failed to read body", http.StatusTemporaryRedirect)
 		return
 	}
 	// Unmarshal the JSON response
 	var authInfo AuthInfo
 	if err := json.Unmarshal(body, &authInfo); err != nil {
-		http.Redirect(w, r, "/?msg=🚫 Failed to unmarshal JSON", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?msg=🚫 Failed to unmarshal JSON", http.StatusTemporaryRedirect)
 		return
 	}
 	session.Values["user"] = authInfo.OauthAccessToken.UserIds.UserID
 	session.Save(r, w)
 	// Redirect to main page
-	http.Redirect(w, r, "/?show=1&msg=✅ API key aquired", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?show=1&msg=✅ API key aquired", http.StatusTemporaryRedirect)
 }
 
 func handlePost(w http.ResponseWriter, r *http.Request) {
@@ -380,33 +382,33 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 			if strings.Contains(accessToken, ".") {
 				fmt.Println("Post with Token ID: " + strings.Split(accessToken, ".")[1])
 				if accessToken == "" {
-					http.Redirect(w, r, "/?login=0&msg=🚫 Token is missing", http.StatusTemporaryRedirect)
+					http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 Token is missing", http.StatusTemporaryRedirect)
 					return
 				}
 				// Execute API request
 				ret := ""
 				msg, err := registerGateway(accessToken, r.FormValue("gw_eui"), r.FormValue("gw_id"), r.FormValue("freqplans"), session.Values["user"].(string))
 				if err != nil {
-					http.Redirect(w, r, "/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
+					http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
 					err = invalidateToken(accessToken, strings.Split(accessToken, ".")[1], session.Values["user"].(string))
 					session.Values["state"] = nil
 					session.Values["token"] = nil
 					session.Save(r, w)
 					if err != nil {
-						http.Redirect(w, r, "/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
+						http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
 					}
 					return
 				}
 				ret = msg
 				cupskey, err := createCupsKey(accessToken, r.FormValue("gw_id"))
 				if err != nil {
-					http.Redirect(w, r, "/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
+					http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
 					err = invalidateToken(accessToken, strings.Split(accessToken, ".")[1], session.Values["user"].(string))
 					session.Values["state"] = nil
 					session.Values["token"] = nil
 					session.Save(r, w)
 					if err != nil {
-						http.Redirect(w, r, "/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
+						http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
 						return
 					}
 				}
@@ -414,36 +416,36 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 				ret = msg
 				lnskey, err := createLnsKey(accessToken, r.FormValue("gw_id"))
 				if err != nil {
-					http.Redirect(w, r, "/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
+					http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
 					err = invalidateToken(accessToken, strings.Split(accessToken, ".")[1], session.Values["user"].(string))
 					session.Values["state"] = nil
 					session.Values["token"] = nil
 					session.Save(r, w)
 					if err != nil {
-						http.Redirect(w, r, "/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
+						http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
 					}
 					return
 				}
 				msg, err = assignGwKey(accessToken, r.FormValue("gw_id"), base64.StdEncoding.EncodeToString([]byte(lnskey)))
 				if err != nil {
-					http.Redirect(w, r, "/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
+					http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
 					err = invalidateToken(accessToken, strings.Split(accessToken, ".")[1], session.Values["user"].(string))
 					session.Values["state"] = nil
 					session.Values["token"] = nil
 					session.Save(r, w)
 					if err != nil {
-						http.Redirect(w, r, "/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
+						http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
 					}
 					return
 				}
 				if err != nil {
-					http.Redirect(w, r, "/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
+					http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg, http.StatusTemporaryRedirect)
 					err = invalidateToken(accessToken, strings.Split(accessToken, ".")[1], session.Values["user"].(string))
 					session.Values["state"] = nil
 					session.Values["token"] = nil
 					session.Save(r, w)
 					if err != nil {
-						http.Redirect(w, r, "/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
+						http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+msg+" and failed to invalidate token", http.StatusTemporaryRedirect)
 					}
 					return
 				}
@@ -454,14 +456,14 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 				session.Values["token"] = nil
 				session.Save(r, w)
 				if err != nil {
-					http.Redirect(w, r, "/?login=0&msg=🚫 "+ret+" and failed to invalidate token", http.StatusTemporaryRedirect)
+					http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=🚫 "+ret+" and failed to invalidate token", http.StatusTemporaryRedirect)
 					return
 				}
-				http.Redirect(w, r, "/?login=0&msg=✅ "+ret+"&cupskey="+cupskey, http.StatusTemporaryRedirect)
+				http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?login=0&msg=✅ "+ret+"&cupskey="+cupskey, http.StatusTemporaryRedirect)
 			}
 		}
 	} else {
-		http.Redirect(w, r, "/?msg=🚫 Session invalid", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, os.Getenv("BASE_PATH")+"/?msg=🚫 Session invalid", http.StatusTemporaryRedirect)
 	}
 }
 
